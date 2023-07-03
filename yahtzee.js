@@ -1,9 +1,10 @@
 var diceArray = []
-
+var gameStarted
 
 function setup() {
   createCanvas(600, 500);
-  background(220);
+  background(220)
+  gameStarted = false
   dice1 = new dice(30, 40, 100, 10, '#E47673');
   diceArray.push(dice1);
   dice2 = new dice(140, 40, 100, 10, '#C28DD0');
@@ -17,18 +18,14 @@ function setup() {
 }
 
 function draw() {
-  //noLoop();
-  //drawInstruction()
+  noLoop();
+  drawInstruction();
+  push();
+  strokeWeight(15);
   for(let diceFace of diceArray){
     diceFace.createSquares();
+    diceFace.drawDots();
   }
-  push()
-  strokeWeight(15)
-  for(let diceFace of diceArray){
-    diceFace.drawDots()
-  }
-  pop()
- 
 }
 
 class dice{
@@ -186,18 +183,20 @@ function keyPressed(){
     for(let diceFace of diceArray){
       diceFace.chooseDots()
     }
-    //redraw()
   }
 }
 
 function drawInstruction(){
-  push()
-  textFont('Courier New')
-  textSize(30)
-  fill('red')
-  textAlign(CENTER)
-  text('Spacebar to Roll', 300, 250)
-  pop()
+  if(gameStarted === false){
+    push()
+    textFont('Courier New')
+    textSize(30)
+    fill('red')
+    textAlign(CENTER)
+    text('Spacebar to Roll\nClick Dice to Dock', 300, 250)
+    pop()
+    gameStarted = true
+  }
 }
 
 
