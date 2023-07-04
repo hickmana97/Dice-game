@@ -14,11 +14,9 @@ function setup() {
   diceArray.push(dice4);
   dice5 = new dice(470, 250, 100, 10, '#F8E698');
   diceArray.push(dice5);
-  assignDiceId()
 }
 
 function draw() {
-  noLoop();
   background(220)
   drawInstruction();
   push();
@@ -28,6 +26,7 @@ function draw() {
     diceFace.drawDots();
   }
   pop()
+  
 }
 
 class dice{
@@ -39,13 +38,17 @@ class dice{
     this.colour = colour
     this.createDots()
     this.chooseDots()
-    this.createButtons()
   }
   
   createSquares(){
     push()
     strokeWeight(1)
     stroke(this.colour)
+    if(mouseX >= this.xPos & mouseX <= (this.xPos + this.size)){
+      if(mouseY >= this.yPos & mouseY <= (this.yPos + this.size)){
+        fill(this.colour)
+      }
+    }
     square(this.xPos, this.yPos, this.size, this.radius)
     pop()
   }
@@ -180,18 +183,6 @@ class dice{
     }
   }
   
-  createButtons(){
-    this.diceButton = createButton()
-    this.diceButton.position(this.xPos, this.yPos)
-    this.diceButton.size(this.size)
-    this.diceButton.mouseOver(this.hoverColour)
-    //this.diceButton.mouseOver(changeColour)
-  }
-  
-  hoverColour(){
-    this.diceButton.fill(this.colour)
-  }
-  
 }
 
 function keyPressed(){
@@ -199,6 +190,7 @@ function keyPressed(){
     for(let diceFace of diceArray){
       diceFace.chooseDots()
     }
+    gameStarted = true
   }
 }
 
@@ -211,18 +203,21 @@ function drawInstruction(){
     textAlign(CENTER)
     text('Spacebar to Roll\nClick Dice to Lock', 300, 200)
     pop()
-    gameStarted = true
+    
   }
 }
 
-function assignDiceId(){
-  buttonId = 1
+/*function handleMouseOver(){
   for(let dice of diceArray){
-    dice.diceButton.id = 'dice' + buttonId
-    buttonId += 1
-    console.log(dice.diceButton.id)
+    let area = [dice.xPos + dice.size, dice.yPos + dice.size]
+    if(mouseX >= dice.xPos & mouseX <= (dice.xPos + dice.size)){
+      if(mouseY >= dice.yPos & mouseY <= (dice.yPos + dice.size)){
+        push()
+        fill(dice.colour)
+        pop()
+      }
+    }
   }
-}
-
+}*/
 
 
