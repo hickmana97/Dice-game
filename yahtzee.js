@@ -3,22 +3,23 @@ var gameStarted
 
 function setup() {
   createCanvas(600, 500);
-  background(220)
   gameStarted = false
-  dice1 = new dice(30, 40, 100, 10, '#E47673');
+  dice1 = new dice(30, 250, 100, 10, '#E47673');
   diceArray.push(dice1);
-  dice2 = new dice(140, 40, 100, 10, '#C28DD0');
+  dice2 = new dice(140, 250, 100, 10, '#C28DD0');
   diceArray.push(dice2);
-  dice3 = new dice(250, 40, 100, 10, '#8CC0ED');
+  dice3 = new dice(250, 250, 100, 10, '#8CC0ED');
   diceArray.push(dice3);
-  dice4 = new dice(360, 40, 100, 10, '#A0CCA2');
+  dice4 = new dice(360, 250, 100, 10, '#A0CCA2');
   diceArray.push(dice4);
-  dice5 = new dice(470, 40, 100, 10, '#F8E698');
+  dice5 = new dice(470, 250, 100, 10, '#F8E698');
   diceArray.push(dice5);
+  assignDiceId()
 }
 
 function draw() {
   noLoop();
+  background(220)
   drawInstruction();
   push();
   strokeWeight(15);
@@ -26,6 +27,7 @@ function draw() {
     diceFace.createSquares();
     diceFace.drawDots();
   }
+  pop()
 }
 
 class dice{
@@ -37,6 +39,7 @@ class dice{
     this.colour = colour
     this.createDots()
     this.chooseDots()
+    this.createButtons()
   }
   
   createSquares(){
@@ -176,6 +179,19 @@ class dice{
       point(this.roll6.dot6x, this.roll6.dot6y)
     }
   }
+  
+  createButtons(){
+    this.diceButton = createButton()
+    this.diceButton.position(this.xPos, this.yPos)
+    this.diceButton.size(this.size)
+    this.diceButton.mouseOver(this.hoverColour)
+    //this.diceButton.mouseOver(changeColour)
+  }
+  
+  hoverColour(){
+    this.diceButton.fill(this.colour)
+  }
+  
 }
 
 function keyPressed(){
@@ -193,10 +209,20 @@ function drawInstruction(){
     textSize(30)
     fill('red')
     textAlign(CENTER)
-    text('Spacebar to Roll\nClick Dice to Dock', 300, 250)
+    text('Spacebar to Roll\nClick Dice to Lock', 300, 200)
     pop()
     gameStarted = true
   }
 }
+
+function assignDiceId(){
+  buttonId = 1
+  for(let dice of diceArray){
+    dice.diceButton.id = 'dice' + buttonId
+    buttonId += 1
+    console.log(dice.diceButton.id)
+  }
+}
+
 
 
