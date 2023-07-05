@@ -1,24 +1,28 @@
 var diceArray = []
 var gameStarted
+var rollButton
+var rollCount
 
 function setup() {
   createCanvas(600, 500);
   gameStarted = false
-  dice1 = new dice(30, 250, 100, 10, '#E47673');
+  rollCount = 0
+  dice1 = new dice(30, 250, 100, 10, '#E47673', '#b65e5c' );
   diceArray.push(dice1);
-  dice2 = new dice(140, 250, 100, 10, '#C28DD0');
+  dice2 = new dice(140, 250, 100, 10, '#C28DD0', '#9b71a6');
   diceArray.push(dice2);
-  dice3 = new dice(250, 250, 100, 10, '#8CC0ED');
+  dice3 = new dice(250, 250, 100, 10, '#8CC0ED', '#709abe');
   diceArray.push(dice3);
-  dice4 = new dice(360, 250, 100, 10, '#A0CCA2');
+  dice4 = new dice(360, 250, 100, 10, '#A0CCA2', '#80a382');
   diceArray.push(dice4);
-  dice5 = new dice(470, 250, 100, 10, '#F8E698');
+  dice5 = new dice(470, 250, 100, 10, '#F8E698', '#c6b87a');
   diceArray.push(dice5);
 }
 
 function draw() {
   background(220)
-  drawInstruction();
+  //drawInstruction();
+  drawRollButton();
   push();
   strokeWeight(15);
   for(let diceFace of diceArray){
@@ -30,12 +34,14 @@ function draw() {
 }
 
 class dice{
-  constructor(xPos, yPos, size, radius, colour){
+  constructor(xPos, yPos, size, radius, colour, lockedColour){
     this.xPos = xPos
     this.yPos = yPos
     this.size = size
     this.radius = radius
     this.colour = colour
+    this.lockedColour = lockedColour
+    this.locked = false
     this.createDots()
     this.chooseDots()
   }
@@ -44,10 +50,9 @@ class dice{
     push()
     strokeWeight(1)
     stroke(this.colour)
-    if(mouseX >= this.xPos & mouseX <= (this.xPos + this.size)){
-      if(mouseY >= this.yPos & mouseY <= (this.yPos + this.size)){
-        fill(this.colour)
-      }
+    handleMouseOver(this.xPos, this.yPos, this.colour, this.size, this.size)
+    if(this.locked === true){
+      fill(this.lockedColour)
     }
     square(this.xPos, this.yPos, this.size, this.radius)
     pop()
@@ -185,39 +190,61 @@ class dice{
   
 }
 
-function keyPressed(){
-  if(keyCode === 32){
-    for(let diceFace of diceArray){
-      diceFace.chooseDots()
+
+function drawRollButton(){
+  let buttonXPos = 197
+  let buttonYPos = 190
+  let buttonLen = 200
+  let buttonWid = 50
+  let mouseOverColour = '#E66966'
+  push()
+  //rectMode(CENTER)
+  fill('#E98683')
+  handleMouseOver(buttonXPos, buttonYPos, mouseOverColour, buttonWid, buttonLen)
+  stroke('black')
+  strokeWeight(2)
+  rollButtonShape = rect(buttonXPos, buttonYPos, buttonLen, buttonWid, 20)
+  pop()
+  push()
+  textFont('Courier New')
+  textSize(25)
+  textAlign(CENTER)
+  textStyle(BOLD)
+  rollButtonText = text('ROLLS LEFT ' + rollCount, buttonXPos + (buttonLen / 2) , buttonYPos + (buttonWid / 1.60))
+  pop()
+  rollButton = {
+    buttonXPos,
+    buttonYPos,
+    buttonLen,
+    buttonWid
+  }
+}
+
+function handleMouseOver(xPos, yPos, colour, wid, len){
+  if(mouseX >= xPos & mouseX <= (xPos + len)){
+      if(mouseY >= yPos & mouseY <= (yPos + wid)){
+        fill(colour)
     }
-    gameStarted = true
   }
 }
 
-function drawInstruction(){
-  if(gameStarted === false){
-    push()
-    textFont('Courier New')
-    textSize(30)
-    fill('red')
-    textAlign(CENTER)
-    text('Spacebar to Roll\nClick Dice to Lock', 300, 200)
-    pop()
-    
+function mouseClicked(){
+  if(mouseX >= rollButton.buttonXPos & mouseX <= (rollButton.buttonXPos + rollButton.buttonLen)){
+    if(mouseY >= rollButton.buttonYPos & mouseY <= rollButton.buttonYPos + rollButton.buttonWid){
+      for(let dice of diceArray){
+        if(dice.locked === false){
+        dice.chooseDots()
+        }
+      } 
+    }
   }
-}
-
-/*function handleMouseOver(){
   for(let dice of diceArray){
-    let area = [dice.xPos + dice.size, dice.yPos + dice.size]
     if(mouseX >= dice.xPos & mouseX <= (dice.xPos + dice.size)){
       if(mouseY >= dice.yPos & mouseY <= (dice.yPos + dice.size)){
-        push()
-        fill(dice.colour)
-        pop()
+        dice.locked = true
       }
     }
   }
-}*/
+}
 
 
