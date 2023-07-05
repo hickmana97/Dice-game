@@ -1,4 +1,5 @@
 var diceArray = []
+var buttonArray = []
 var gameStarted
 var rollButton
 var rollCount
@@ -6,7 +7,7 @@ var rollCount
 function setup() {
   createCanvas(600, 500);
   gameStarted = false
-  rollCount = 0
+  rollCount = 3
   dice1 = new dice(30, 250, 100, 10, '#E47673', '#b65e5c' );
   diceArray.push(dice1);
   dice2 = new dice(140, 250, 100, 10, '#C28DD0', '#9b71a6');
@@ -17,26 +18,28 @@ function setup() {
   diceArray.push(dice4);
   dice5 = new dice(470, 250, 100, 10, '#F8E698', '#c6b87a');
   diceArray.push(dice5);
+  rollButton = new Button(197, 190, 200, 50, 20, '#E98683', '#E66966', 'ROLLS LEFT ' + rollCount);
+  buttonArray.push(rollButton);
+  resetButton = new Button(425, 190, 150, 50, 20, '#E98683', '#E66966', 'RESET')
+  buttonArray.push(resetButton)
 }
 
 function draw() {
   background(220)
-  //drawInstruction();
-  drawRollButton();
-  push();
-  strokeWeight(15);
-  for(let diceFace of diceArray){
-    diceFace.createSquares();
-    diceFace.drawDots();
+  rollButton.create()
+  if(rollCount <= 0){
+    resetButton.create()
   }
-  pop()
-  
+  for(let dice of diceArray){
+    dice.createSquares();
+    dice.drawDots();
+  }
 }
 
 class dice{
   constructor(xPos, yPos, size, radius, colour, lockedColour){
     this.xPos = xPos
-    this.yPos = yPos
+    this.yPos = 250
     this.size = size
     this.radius = radius
     this.colour = colour
@@ -54,11 +57,23 @@ class dice{
     if(this.locked === true){
       fill(this.lockedColour)
     }
+    if(this.locked === true){
+      this.yPos = 375
+    }
+    else{
+      this.yPos = 250
+    }
     square(this.xPos, this.yPos, this.size, this.radius)
     pop()
   }
   
   createDots(){
+    if(this.locked === true){
+      this.yPos = 375
+    }
+    else{
+      this.yPos = 250
+    }
     let dottl = [this.xPos + (this.size * 0.25), this.yPos + (this.size * 0.25)]
     let dottr = [this.xPos + (this.size * 0.75), this.yPos + (this.size * 0.25)]
     let dotml = [this.xPos + (this.size * 0.25), this.yPos + (this.size * 0.5)]
@@ -153,6 +168,8 @@ class dice{
   }
   
   drawDots(){
+    push()
+    strokeWeight(15)
     if(this.assignedDots === this.roll1){
       point(this.roll1.dot1x, this.roll1.dot1y)
     }
@@ -186,37 +203,41 @@ class dice{
       point(this.roll6.dot5x, this.roll6.dot5y)
       point(this.roll6.dot6x, this.roll6.dot6y)
     }
+    pop()
   }
   
 }
 
-
-function drawRollButton(){
-  let buttonXPos = 197
-  let buttonYPos = 190
-  let buttonLen = 200
-  let buttonWid = 50
-  let mouseOverColour = '#E66966'
-  push()
-  //rectMode(CENTER)
-  fill('#E98683')
-  handleMouseOver(buttonXPos, buttonYPos, mouseOverColour, buttonWid, buttonLen)
-  stroke('black')
-  strokeWeight(2)
-  rollButtonShape = rect(buttonXPos, buttonYPos, buttonLen, buttonWid, 20)
-  pop()
-  push()
-  textFont('Courier New')
-  textSize(25)
-  textAlign(CENTER)
-  textStyle(BOLD)
-  rollButtonText = text('ROLLS LEFT ' + rollCount, buttonXPos + (buttonLen / 2) , buttonYPos + (buttonWid / 1.60))
-  pop()
-  rollButton = {
-    buttonXPos,
-    buttonYPos,
-    buttonLen,
-    buttonWid
+class Button{
+  constructor(xPos, yPos, buttonLength, buttonWidth, radius, colour, mouseOverColour, displayText){
+    this.xPos = xPos
+    this.yPos = yPos
+    this.buttonLength = buttonLength
+    this.buttonWidth = buttonWidth
+    this.radius = radius
+    this.colour = colour
+    this.mOColour = mouseOverColour
+    this.displayText = displayText
+  }
+  
+  create(){
+    push()
+    fill(this.colour)
+    handleMouseOver(this.xPos, this.yPos, this.mOColour, this.buttonWidth, this.buttonLength)
+    stroke('black')
+    strokeWeight(2)
+    this.shape = rect(this.xPos, this.yPos, this.buttonLength, this.buttonWidth, this.radius)
+    pop()
+    this.createText()
+  }
+  
+  createText(){
+    push()
+    textFont('Courier New')
+    textSize(25)
+    textAlign(CENTER)
+    textStyle(BOLD)
+    this.buttonText = text(this.displayText, this.xPos + (this.buttonLength / 2), this.yPos + (this.buttonWidth / 1.60))
   }
 }
 
@@ -229,19 +250,36 @@ function handleMouseOver(xPos, yPos, colour, wid, len){
 }
 
 function mouseClicked(){
-  if(mouseX >= rollButton.buttonXPos & mouseX <= (rollButton.buttonXPos + rollButton.buttonLen)){
-    if(mouseY >= rollButton.buttonYPos & mouseY <= rollButton.buttonYPos + rollButton.buttonWid){
+  if(mouseX >= rollButton.xPos & mouseX <= (rollButton.xPos + rollButton.buttonLength)){
+    if(mouseY >= rollButton.yPos & mouseY <= rollButton.yPos + rollButton.buttonWidth){
       for(let dice of diceArray){
-        if(dice.locked === false){
+        if(dice.locked === false & rollCount > 0){
         dice.chooseDots()
         }
-      } 
+      }
+      if(rollCount > 0){
+        rollCount -= 1
+        rollButton.displayText = 'ROLLS LEFT ' + rollCount
+      }
     }
   }
+  
   for(let dice of diceArray){
     if(mouseX >= dice.xPos & mouseX <= (dice.xPos + dice.size)){
       if(mouseY >= dice.yPos & mouseY <= (dice.yPos + dice.size)){
         dice.locked = true
+        //dice.createDots()
+      }
+    }
+  }
+  
+  if(mouseX >= resetButton.xPos & mouseX <= (resetButton.xPos + resetButton.buttonLength)){
+    if(mouseY >= resetButton.yPos & mouseY <= (resetButton.yPos + resetButton.buttonWidth)){
+      rollCount = 3
+      rollButton.displayText = 'ROLLS LEFT ' + rollCount
+      for(let dice of diceArray){
+        dice.locked = false
+        //dice.createDots()
       }
     }
   }
