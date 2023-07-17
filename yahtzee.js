@@ -149,6 +149,9 @@ class Dice{
     //draws the dots assigned to the dice, important to seperate this from choosing the dots so that the dots are only chosen once
     push()
     strokeWeight(15)
+    if(this.locked === true){
+      translate(0 , 125)
+    }
     if(this.assignedDots === this.roll1){
       point(this.roll1.dot1x, this.roll1.dot1y)
     }
