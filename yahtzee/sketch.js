@@ -8,6 +8,7 @@ function setup() {
   createCanvas(600, 500);
   gameStarted = false
   rollCount = 3
+  scoreCalc = new Score()
   dice1 = new dice(30, 250, 100, 10, '#E47673', '#b65e5c' );
   diceArray.push(dice1);
   dice2 = new dice(140, 250, 100, 10, '#C28DD0', '#9b71a6');
@@ -48,6 +49,7 @@ function mouseClicked(){
   if(mouseX >= rollButton.xPos & mouseX <= (rollButton.xPos + rollButton.buttonLength)){
     if(mouseY >= rollButton.yPos & mouseY <= rollButton.yPos + rollButton.buttonWidth){
       for(let dice of diceArray){
+        //rerolls all unlocked dice as long as there are rolls left
         if(dice.locked === false & rollCount > 0){
         dice.chooseDots()
         }
@@ -60,22 +62,28 @@ function mouseClicked(){
   }
   
   for(let dice of diceArray){
+    //locks dice face on mouse click
     if(mouseX >= dice.xPos & mouseX <= (dice.xPos + dice.size)){
       if(mouseY >= dice.yPos & mouseY <= (dice.yPos + dice.size)){
+        if(dice.locked === false){
         dice.locked = true
-        //dice.createDots()
+        }
+        else if (dice.locked === true){
+        dice.locked = false
+      }
       }
     }
   }
   
   if(mouseX >= resetButton.xPos & mouseX <= (resetButton.xPos + resetButton.buttonLength)){
     if(mouseY >= resetButton.yPos & mouseY <= (resetButton.yPos + resetButton.buttonWidth)){
+      //resets the roll count and unlocks all dice
       rollCount = 3
       rollButton.displayText = 'ROLLS LEFT ' + rollCount
       for(let dice of diceArray){
         dice.locked = false
-        //dice.createDots()
       }
+      scoreCalc.runScore()
     }
   }
 }
