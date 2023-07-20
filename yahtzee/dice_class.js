@@ -113,23 +113,29 @@ class dice{
     //console.log(randomDots)
     if(randomDots === 1){
       this.assignedDots = this.roll1
+      this.number = 1
     }
     if(randomDots === 2){
       this.assignedDots = this.roll2
+      this.number = 2
     }
     if(randomDots === 3){
       this.assignedDots = this.roll3
+      this.number = 3
     }
     if(randomDots === 4){
       this.assignedDots = this.roll4
+      this.number = 4
     }
     if(randomDots === 5){
       this.assignedDots = this.roll5
+      this.number = 5
     }
     if(randomDots === 6){
       this.assignedDots = this.roll6
+      this.number = 6
     }
-    //console.log(this.assignedDots)
+    console.log(this.number)
   }
   
   drawDots(){
