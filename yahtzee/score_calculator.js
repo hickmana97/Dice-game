@@ -24,6 +24,7 @@ class Score {
   
   createScore(){
     this.createCount()
+    console.log(this.rollCountArray)
     for(let count of this.rollCountArray){
       if(count === 3){
         this.score = '3 OF A KIND'
@@ -32,8 +33,11 @@ class Score {
         this.score = '4 OF A KIND'
       }
       else if(count === 5){
-        this.score = 'FULL HOUSE'
+        this.score = 'YAHTZEE'
       }
+    }
+    if(this.rollCountArray.includes(2) & this.rollCountArray.includes(3)){
+      this.score = 'FULL HOUSE'
     }
   }
   
