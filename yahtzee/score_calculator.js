@@ -6,7 +6,8 @@ class Score {
   scoreReset(){
     this.rollCountArray = []
     this.rollNumberArray = []
-    this.score = 'ROLL TO SCORE'
+    this.hand = 'ROLL TO SCORE'
+    this.score = 0
     this.oneCount = 0
     this.twoCount = 0
     this.threeCount = 0
@@ -19,26 +20,26 @@ class Score {
     for(let dice of diceArray){
       this.rollNumberArray.push(dice.number)
     }
+    this.createHand()
     this.createScore()
   }
   
-  createScore(){
+  createHand(){
     this.createCount()
     console.log(this.rollCountArray)
     for(let count of this.rollCountArray){
       if(count === 3){
-        this.score = '3 OF A KIND'
+        this.hand = '3 OF A KIND'
       }
       else if(count === 4){
-        this.score = '4 OF A KIND'
+        this.hand = '4 OF A KIND'
       }
       else if(count === 5){
-        this.score = 'YAHTZEE'
+        this.hand = 'YAHTZEE'
       }
     }
-    if(this.rollCountArray.includes(2) & this.rollCountArray.includes(3)){
-      this.score = 'FULL HOUSE'
-    }
+    this.checkFullHouse()
+    this.checkStraights()
   }
   
   createCount(){
@@ -64,4 +65,37 @@ class Score {
     }
     this.rollCountArray.push(this.oneCount, this.twoCount, this.threeCount, this.fourCount, this.fiveCount, this.sixCount)
   }
+  
+  checkFullHouse(){
+    if(this.rollCountArray.includes(2) && this.rollCountArray.includes(3)){
+      this.hand = 'FULL HOUSE'
+    }
+  }
+  
+  checkStraights(){
+    if(this.rollNumberArray.includes(1) && this.rollNumberArray.includes(2) && this.rollNumberArray.includes(3) && this.rollNumberArray.includes(4)){
+      this.hand = 'SMALL STRAIGHT'
+    }
+    if(this.rollNumberArray.includes(2) && this.rollNumberArray.includes(3) && this.rollNumberArray.includes(4) && this.rollNumberArray.includes(5)){
+      this.hand = 'SMALL STRAIGHT'
+    }
+    if(this.rollNumberArray.includes(3) && this.rollNumberArray.includes(4) && this.rollNumberArray.includes(5) && this.rollNumberArray.includes(6)){
+      this.hand = 'SMALL STRAIGHT'
+    }
+    if(this.rollNumberArray.includes(1) && this.rollNumberArray.includes(2) && this.rollNumberArray.includes(3) && this.rollNumberArray.includes(4) && this.rollNumberArray.includes(5)){
+      this.hand = 'LARGE STRAIGHT'
+    }
+    if(this.rollNumberArray.includes(2) && this.rollNumberArray.includes(3) && this.rollNumberArray.includes(4) && this.rollNumberArray.includes(5) && this.rollNumberArray.includes(6)){
+      this.hand = 'LARGE STRAIGHT'
+    }
+  }
+  
+  createScore(){
+    this.upperSection()
+  }
+  
+  upperSection(){
+    
+  }
 }
+
