@@ -35,6 +35,7 @@ function draw() {
     dice.createSquares();
     dice.drawDots();
   }
+  text(scoreCalc.score, 297, 150)
 }
 
 function handleMouseOver(xPos, yPos, colour, wid, len){
@@ -57,6 +58,9 @@ function mouseClicked(){
       if(rollCount > 0){
         rollCount -= 1
         rollButton.displayText = 'ROLLS LEFT ' + rollCount
+      }
+      if(rollCount === 0){
+        scoreCalc.runScore()
       }
     }
   }
@@ -82,8 +86,9 @@ function mouseClicked(){
       rollButton.displayText = 'ROLLS LEFT ' + rollCount
       for(let dice of diceArray){
         dice.locked = false
+        dice.chooseDots()
       }
-      scoreCalc.runScore()
+      scoreCalc.scoreReset()
     }
   }
 }
