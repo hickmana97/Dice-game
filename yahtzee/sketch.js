@@ -5,7 +5,7 @@ var rollButton
 var rollCount
 
 function setup() {
-  createCanvas(600, 500);
+  createCanvas(800, 500);
   gameStarted = false
   rollCount = 3
   scoreCalc = new Score()
@@ -23,11 +23,14 @@ function setup() {
   buttonArray.push(rollButton);
   resetButton = new Button(425, 190, 150, 50, 20, '#E98683', '#E66966', 'RESET')
   buttonArray.push(resetButton)
+  scoreButton = new Button(20, 190, 150, 50, 20, '#E98683', '#E66966', 'SCORE')
+  buttonArray.push(scoreButton)
 }
 
 function draw() {
   background(220)
   rollButton.create()
+  scoreButton.create()
   if(rollCount <= 0){
     resetButton.create()
   }
@@ -35,7 +38,8 @@ function draw() {
     dice.createSquares();
     dice.drawDots();
   }
-  text(scoreCalc.score, 297, 150)
+  text(scoreCalc.hand, 297, 125)
+  text('SCORE:' , 297, 165)
 }
 
 function handleMouseOver(xPos, yPos, colour, wid, len){
@@ -58,9 +62,6 @@ function mouseClicked(){
       if(rollCount > 0){
         rollCount -= 1
         rollButton.displayText = 'ROLLS LEFT ' + rollCount
-      }
-      if(rollCount === 0){
-        scoreCalc.runScore()
       }
     }
   }
@@ -89,6 +90,13 @@ function mouseClicked(){
         dice.chooseDots()
       }
       scoreCalc.scoreReset()
+    }
+  }
+  
+  if(mouseX >= scoreButton.xPos & mouseX <= (scoreButton.xPos + scoreButton.buttonLength)){
+    if(mouseY >= scoreButton.yPos & mouseY <= (scoreButton.yPos + scoreButton.buttonLength)){
+      scoreCalc.scoreReset()
+      scoreCalc.runScore()
     }
   }
 }
