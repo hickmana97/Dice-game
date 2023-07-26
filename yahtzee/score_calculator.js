@@ -18,7 +18,9 @@ class Score {
 
   runScore(){
     for(let dice of diceArray){
-      this.rollNumberArray.push(dice.number)
+      if(dice.locked === true){
+        this.rollNumberArray.push(dice.number)
+      }
     }
     this.createHand()
     this.createScore()
