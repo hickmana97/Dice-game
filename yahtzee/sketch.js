@@ -31,6 +31,7 @@ function draw() {
   background(220)
   rollButton.create()
   scoreButton.create()
+  scoreCalc.drawCards()
   if(rollCount <= 0){
     resetButton.create()
   }
@@ -39,7 +40,7 @@ function draw() {
     dice.drawDots();
   }
   text(scoreCalc.hand, 297, 125)
-  text('SCORE:' , 297, 165)
+  text('SCORE:' + scoreCalc.score , 297, 165)
 }
 
 function handleMouseOver(xPos, yPos, colour, wid, len){
@@ -94,7 +95,7 @@ function mouseClicked(){
   }
   
   if(mouseX >= scoreButton.xPos & mouseX <= (scoreButton.xPos + scoreButton.buttonLength)){
-    if(mouseY >= scoreButton.yPos & mouseY <= (scoreButton.yPos + scoreButton.buttonLength)){
+    if(mouseY >= scoreButton.yPos & mouseY <= (scoreButton.yPos + scoreButton.buttonWidth)){
       scoreCalc.scoreReset()
       scoreCalc.runScore()
     }
